@@ -782,25 +782,21 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
                     cwd.hasChild = false;
                     resolve(cwd);
                 }
+            }else{
+                fs.readdir(filepath, function (err, stats) {
+                    stats.forEach(stat => {
+                        if (fs.lstatSync(filepath + stat).isDirectory()) {
+                            cwd.hasChild = true
+                        } else {
+                            cwd.hasChild = false;
+                        }
+                        if (cwd.hasChild) return;
+                    });
+                    resolve(cwd);
+                });  
             }
         });
         
-        if (fs.lstatSync(filepath).isFile()) {
-            cwd.hasChild = false; // Si c'est un fichier, il ne peut pas avoir d'enfants
-            resolve(cwd);
-        }else{
-            fs.readdir(filepath, function (err, stats) {
-                stats.forEach(stat => {
-                    if (fs.lstatSync(filepath + stat).isDirectory()) {
-                        cwd.hasChild = true
-                    } else {
-                        cwd.hasChild = false;
-                    }
-                    if (cwd.hasChild) return;
-                });
-                resolve(cwd);
-            });   
-        }
     });
 }
 //Multer to upload the files to the server
