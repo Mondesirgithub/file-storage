@@ -782,12 +782,9 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
                     cwd.hasChild = false;
                     resolve(cwd);
                 }
-            }else{
-                
             }
         });
-        
-        if (!fs.lstatSync(filepath).isFile()) {
+        if (fs.lstatSync(filepath).isDirectory()) {
             fs.readdir(filepath, function (err, stats) {
                 stats.forEach(stat => {
                     if (fs.lstatSync(filepath + stat).isDirectory()) {
@@ -798,7 +795,9 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
                     if (cwd.hasChild) return;
                 });
                 resolve(cwd);
-            });   
+            });
+        }else{
+            console.log("NONNNNNNNNNNNNNNNNNNNNN")
         }
     });
 }
