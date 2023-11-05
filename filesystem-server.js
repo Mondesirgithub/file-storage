@@ -113,15 +113,15 @@ function renameFolder(req, res) {
     const fullNewPath = (contentRootPath + req.body.data[0].filterPath + newName ).replace(/[\\/]/g, "\\");
     const isValidateOldPath = fullOldPath == resolvedOldDirectoryPath ? true : false;
     const isValidateNewPath = fullNewPath == resolvedNewDirectoryPath ? true : false;
-    if(!isValidateOldPath || !isValidateNewPath){
-        var errorMsg = new Error();
-        errorMsg.message = "Access denied for Directory-traversal";
-        errorMsg.code = "401";
-        response = { error: errorMsg };
-        response = JSON.stringify(response);
-        res.setHeader('Content-Type', 'application/json');
-        res.json(response);
-    }
+    // if(!isValidateOldPath || !isValidateNewPath){
+    //     var errorMsg = new Error();
+    //     errorMsg.message = "Access denied for Directory-traversal";
+    //     errorMsg.code = "401";
+    //     response = { error: errorMsg };
+    //     response = JSON.stringify(response);
+    //     res.setHeader('Content-Type', 'application/json');
+    //     res.json(response);
+    // }
     var permission = getPermission((contentRootPath + req.body.data[0].filterPath), oldName, req.body.data[0].isFile, contentRootPath, req.body.data[0].filterPath);
     if (permission != null && (!permission.read || !permission.write)) {
         var errorMsg = new Error();
@@ -179,15 +179,15 @@ function deleteFolder(req, res, contentRootPath) {
         const resolvedPath = path.join(contentRootPath + item.filterPath, item.name);
         const fullPath = (contentRootPath + item.filterPath + item.name ).replace(/[\\/]/g, "\\");
         const isValidatePath = fullPath == resolvedPath ? true : false;
-        if(!isValidatePath){
-            var errorMsg = new Error();
-            errorMsg.message = "Access denied for Directory-traversal";
-            errorMsg.code = "401";
-            response = { error: errorMsg };
-            response = JSON.stringify(response);
-            res.setHeader('Content-Type', 'application/json');
-            res.json(response);
-        }
+        // if(!isValidatePath){
+        //     var errorMsg = new Error();
+        //     errorMsg.message = "Access denied for Directory-traversal";
+        //     errorMsg.code = "401";
+        //     response = { error: errorMsg };
+        //     response = JSON.stringify(response);
+        //     res.setHeader('Content-Type', 'application/json');
+        //     res.json(response);
+        // }
         var fromPath = contentRootPath + item.filterPath;
         permission = getPermission(fromPath, item.name, item.isFile, contentRootPath, item.filterPath);
         if (permission != null && (!permission.read || !permission.write)) {
@@ -235,15 +235,15 @@ function createFolder(req, res, filepath, contentRootPath) {
     const fullPath = (contentRootPath + req.body.path+req.body.name).replace(/\//g, "\\\\");
     const isValidatePath = fullPath == resolvedPath ? true : false;
 
-    if(!isValidatePath){
-        var errorMsg = new Error();
-        errorMsg.message = "Access denied for Directory-traversal";
-        errorMsg.code = "401";
-        response = { error: errorMsg };
-        response = JSON.stringify(response);
-        res.setHeader('Content-Type', 'application/json');
-        res.json(response);
-    }
+    // if(!isValidatePath){
+    //     var errorMsg = new Error();
+    //     errorMsg.message = "Access denied for Directory-traversal";
+    //     errorMsg.code = "401";
+    //     response = { error: errorMsg };
+    //     response = JSON.stringify(response);
+    //     res.setHeader('Content-Type', 'application/json');
+    //     res.json(response);
+    // }
     var pathPermission = getPathPermission(req.path, false, req.body.data[0].name, filepath, contentRootPath, req.body.data[0].filterPath);
     if (pathPermission != null && (!pathPermission.read || !pathPermission.writeContents)) {
         var errorMsg = new Error();
@@ -348,15 +348,15 @@ function getFileDetails(req, res, contentRootPath, filterPath) {
         const resolvedPath = path.resolve(contentRootPath + item.filterPath, item.name);
         const fullPath = (contentRootPath.replace(/\/+$/, '') + item.filterPath + item.name ).replace(/[\\/]/g, "\\");
         const isValidatePath = fullPath == resolvedPath ? true : false;
-        if(!isValidatePath){
-            var errorMsg = new Error();
-            errorMsg.message = "Access denied for Directory-traversal";
-            errorMsg.code = "401";
-            response = { error: errorMsg };
-            response = JSON.stringify(response);
-            res.setHeader('Content-Type', 'application/json');
-            res.json(response);
-        }
+        // if(!isValidatePath){
+        //     var errorMsg = new Error();
+        //     errorMsg.message = "Access denied for Directory-traversal";
+        //     errorMsg.code = "401";
+        //     response = { error: errorMsg };
+        //     response = JSON.stringify(response);
+        //     res.setHeader('Content-Type', 'application/json');
+        //     res.json(response);
+        // }
     });
     var isNamesAvailable = req.body.names.length > 0 ? true : false;
     if (req.body.names.length == 0 && req.body.data != 0) {
@@ -483,15 +483,15 @@ function CopyFiles(req, res, contentRootPath) {
         const resolvedPath = path.join(contentRootPath + item.filterPath, item.name);
         const fullPath = (contentRootPath + item.filterPath + item.name ).replace(/[\\/]/g, "\\");
         const isValidatePath = fullPath == resolvedPath ? true : false;
-        if(!isValidatePath){
-            var errorMsg = new Error();
-            errorMsg.message = "Access denied for Directory-traversal";
-            errorMsg.code = "401";
-            response = { error: errorMsg };
-            response = JSON.stringify(response);
-            res.setHeader('Content-Type', 'application/json');
-            res.json(response);
-        }
+        // if(!isValidatePath){
+        //     var errorMsg = new Error();
+        //     errorMsg.message = "Access denied for Directory-traversal";
+        //     errorMsg.code = "401";
+        //     response = { error: errorMsg };
+        //     response = JSON.stringify(response);
+        //     res.setHeader('Content-Type', 'application/json');
+        //     res.json(response);
+        // }
         var fromPath = contentRootPath + item.filterPath;
         permission = getPermission(fromPath, item.name, item.isFile, contentRootPath, item.filterPath);
         var fileAccessDenied = (permission != null && (!permission.read || !permission.copy));
@@ -586,15 +586,15 @@ function MoveFiles(req, res, contentRootPath) {
         const resolvedPath = path.join(contentRootPath + item.filterPath, item.name);
         const fullPath = (contentRootPath + item.filterPath + item.name ).replace(/[\\/]/g, "\\");
         const isValidatePath = fullPath == resolvedPath ? true : false;
-        if(!isValidatePath){
-            var errorMsg = new Error();
-            errorMsg.message = "Access denied for Directory-traversal";
-            errorMsg.code = "401";
-            response = { error: errorMsg };
-            response = JSON.stringify(response);
-            res.setHeader('Content-Type', 'application/json');
-            res.json(response);
-        }
+        // if(!isValidatePath){
+        //     var errorMsg = new Error();
+        //     errorMsg.message = "Access denied for Directory-traversal";
+        //     errorMsg.code = "401";
+        //     response = { error: errorMsg };
+        //     response = JSON.stringify(response);
+        //     res.setHeader('Content-Type', 'application/json');
+        //     res.json(response);
+        // }
         var fromPath = contentRootPath + item.filterPath;
         permission = getPermission(fromPath, item.name, item.isFile, contentRootPath, item.filterPath);
         var fileAccessDenied = (permission != null && (!permission.read || !permission.write));
@@ -834,15 +834,15 @@ app.get('/GetImage', function (req, res) {
     const resolvedPath = path.resolve(contentRootPath + image.substr(0, image.lastIndexOf("/")), image.substr(image.lastIndexOf("/") + 1, image.length - 1));
     const fullPath = (contentRootPath + image).replace(/[\\/]/g, "\\");
     const isValidatePath = fullPath == resolvedPath ? true : false;
-    if(!isValidatePath){
-        var errorMsg = new Error();
-        errorMsg.message = "Access denied for Directory-traversal";
-        errorMsg.code = "401";
-        response = { error: errorMsg };
-        response = JSON.stringify(response);
-        res.setHeader('Content-Type', 'application/json');
-        res.json(response);
-    }
+    // if(!isValidatePath){
+    //     var errorMsg = new Error();
+    //     errorMsg.message = "Access denied for Directory-traversal";
+    //     errorMsg.code = "401";
+    //     response = { error: errorMsg };
+    //     response = JSON.stringify(response);
+    //     res.setHeader('Content-Type', 'application/json');
+    //     res.json(response);
+    // }
     var pathPermission = getPermission(contentRootPath + image.substr(0, image.lastIndexOf("/")), image.substr(image.lastIndexOf("/") + 1, image.length - 1), true, contentRootPath, image.substr(0, image.lastIndexOf("/")));
     if (pathPermission != null && !pathPermission.read) {
         return null;
@@ -980,27 +980,27 @@ app.post('/Download', function (req, res) {
         const resolvedPath = path.join(contentRootPath + item.filterPath, item.name);
         const fullPath = (contentRootPath + item.filterPath + item.name).replace(/\//g, "\\");
         const isValidatePath = fullPath == resolvedPath ? true : false;
-        if(!isValidatePath){
-            var errorMsg = new Error();
-            errorMsg.message = "Access denied for Directory-traversal";
-            errorMsg.code = "401";
-            response = { error: errorMsg };
-            response = JSON.stringify(response);
-            res.setHeader('Content-Type', 'application/json');
-            res.json(response);
-        }
+        // if(!isValidatePath){
+        //     var errorMsg = new Error();
+        //     errorMsg.message = "Access denied for Directory-traversal";
+        //     errorMsg.code = "401";
+        //     response = { error: errorMsg };
+        //     response = JSON.stringify(response);
+        //     res.setHeader('Content-Type', 'application/json');
+        //     res.json(response);
+        // }
         var filepath = (contentRootPath + item.filterPath).replace(/\\/g, "/");
         permission = getPermission(filepath + item.name, item.name, item.isFile, contentRootPath, item.filterPath);
-        if (permission != null && (!permission.read || !permission.download)) {
-            permissionDenied = true;
-            var errorMsg = new Error();
-            errorMsg.message = (permission.message !== "") ? permission.message : getFileName(contentRootPath + item.filterPath + item.name) + " is not accessible. You need permission to perform the download action.";
-            errorMsg.code = "401";
-            response = { error: errorMsg };
-            response = JSON.stringify(response);
-            res.setHeader('Content-Type', 'application/json');
-            res.json(response);
-        }
+        // if (permission != null && (!permission.read || !permission.download)) {
+        //     permissionDenied = true;
+        //     var errorMsg = new Error();
+        //     errorMsg.message = (permission.message !== "") ? permission.message : getFileName(contentRootPath + item.filterPath + item.name) + " is not accessible. You need permission to perform the download action.";
+        //     errorMsg.code = "401";
+        //     response = { error: errorMsg };
+        //     response = JSON.stringify(response);
+        //     res.setHeader('Content-Type', 'application/json');
+        //     res.json(response);
+        // }
     });
     if (!permissionDenied) {
         if (downloadObj.names.length === 1 && downloadObj.data[0].isFile) {
@@ -1268,16 +1268,16 @@ app.post('/', function (req, res) {
             const cwdFiles = await FileManagerDirectoryContent(req, res, contentRootPath + req.body.path);
             cwdFiles.name = req.body.path == "/" ? rootName = (path.basename(contentRootPath + req.body.path)) : path.basename(contentRootPath + req.body.path)
             var response = {};
-            if(!isValidatePath)
-            {
-                var errorMsg = new Error();
-                errorMsg.message = "Access denied for Directory-traversal.";
-                errorMsg.code = "401";
-                response = { cwd: cwdFiles, files: null, error: errorMsg };
-                response = JSON.stringify(response);
-                res.setHeader('Content-Type', 'application/json');
-                res.json(response);
-            }
+            // if(!isValidatePath)
+            // {
+            //     var errorMsg = new Error();
+            //     errorMsg.message = "Access denied for Directory-traversal.";
+            //     errorMsg.code = "401";
+            //     response = { cwd: cwdFiles, files: null, error: errorMsg };
+            //     response = JSON.stringify(response);
+            //     res.setHeader('Content-Type', 'application/json');
+            //     res.json(response);
+            // }
             if (cwdFiles.permission != null && !cwdFiles.permission.read) {
                 var errorMsg = new Error();
                 errorMsg.message = (cwdFiles.permission.message !== "") ? cwdFiles.permission.message :
