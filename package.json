@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "archiver": "^3.0.0",
+    "aws-sdk": "^2.1487.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
@@ -38,16 +39,16 @@
     "yargs": "^14.2.0"
   },
   "devDependencies": {
+    "gulp": "^3.9.0",
     "gulp-jshint": "^2.1.0",
     "jshint": "^2.10.2",
-    "gulp": "^3.9.0",
     "require-dir": "^0.3.2",
     "requirejs": "^2.2.0",
     "shelljs": "^0.7.0"
   },
   "scripts": {
     "test": "gulp lint",
-    "start": "node filesystem-server.js -d C:/Users",
+    "start": "node filesystem-server.js -d /exauapp",
     "ci-publish": "gulp publish"
   }
 }

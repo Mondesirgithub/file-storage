@@ -15,6 +15,7 @@ const fs = require('fs');
 var cors = require('cors');
 const pattern = /(\.\.\/)/g;
 
+
 var contentRootPath = yargs.argv.d;
 contentRootPath=contentRootPath.replace("../","");
 
@@ -233,6 +234,7 @@ function createFolder(req, res, filepath, contentRootPath) {
     const resolvedPath = newDirectoryPath.replace(/[\\/]/g, "\\\\");
     const fullPath = (contentRootPath + req.body.path+req.body.name).replace(/\//g, "\\\\");
     const isValidatePath = fullPath == resolvedPath ? true : false;
+
     if(!isValidatePath){
         var errorMsg = new Error();
         errorMsg.message = "Access denied for Directory-traversal";
@@ -258,7 +260,6 @@ function createFolder(req, res, filepath, contentRootPath) {
             errorMsg.message = "A file or folder with the name " + req.body.name + " already exists.";
             errorMsg.code = "400";
             response = { error: errorMsg };
-
             response = JSON.stringify(response);
             res.setHeader('Content-Type', 'application/json');
             res.json(response);
