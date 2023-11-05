@@ -785,6 +785,8 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
             }
         });
 
+        const myFile = filepath
+
         try{
             if (fs.lstatSync(filepath).isDirectory()) {
                 fs.readdir(filepath, function (err, stats) {
@@ -801,7 +803,7 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
             }
         }catch(e){
             console.log("ICIIIIIIIIIIIIIIIIIIIIIIIIIIi")
-            const newPathWithoutFilename = path.dirname(filePath);
+            const newPathWithoutFilename = path.dirname(myFile);
 
             if (fs.lstatSync(newPathWithoutFilename).isDirectory()) {
                 fs.readdir(newPathWithoutFilename, function (err, stats) {
