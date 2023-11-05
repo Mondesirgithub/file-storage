@@ -765,7 +765,7 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
         var cwd = {};
         replaceRequestParams(req, res);
         fs.stat(filepath, function (err, stats) {
-            if (err) {
+            if (!stats) {
                 res.redirect(req.originalUrl);
                 return;
             }
