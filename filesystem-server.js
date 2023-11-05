@@ -315,18 +315,13 @@ function getFolderSize(req, res, directory, sizeValue) {
  * function to get the size in kb, MB
  */
 function getSize(size) {
-    if (size === undefined || size === null) {
-        return "Taille inconnue";
-    }
     var hz;
     if (size < 1024) hz = size + ' B';
     else if (size < 1024 * 1024) hz = (size / 1024).toFixed(2) + ' KB';
     else if (size < 1024 * 1024 * 1024) hz = (size / 1024 / 1024).toFixed(2) + ' MB';
     else hz = (size / 1024 / 1024 / 1024).toFixed(2) + ' GB';
-
     return hz;
 }
-
 
 function checkForMultipleLocations(req, contentRootPath) {
     var previousLocation = "";
@@ -770,11 +765,15 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
         var cwd = {};
         replaceRequestParams(req, res);
         fs.stat(filepath, function (err, stats) {
+            if (err) {
+                res.redirect(req.originalUrl);
+                return;
+            }
             cwd.name = path.basename(filepath);
-            cwd.size = getSize(stats ? stats.size : null);
-            cwd.isFile = stats ? stats.isFile() : true;
-            cwd.dateModified = stats ? stats.ctime : new Date();
-            cwd.dateCreated = stats ? stats.mtime : new Date();
+            cwd.size = getSize(stats.size);
+            cwd.isFile = stats.isFile();
+            cwd.dateModified = stats.ctime;
+            cwd.dateCreated = stats.mtime;
             cwd.type = path.extname(filepath);
             if (searchFilterPath) {
                 cwd.filterPath = searchFilterPath;
