@@ -784,20 +784,38 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
                 }
             }
         });
-        if (fs.lstatSync(filepath).isDirectory()) {
-            fs.readdir(filepath, function (err, stats) {
-                stats.forEach(stat => {
-                    if (fs.lstatSync(filepath + stat).isDirectory()) {
-                        cwd.hasChild = true
-                    } else {
-                        cwd.hasChild = false;
-                    }
-                    if (cwd.hasChild) return;
+
+        try{
+            if (fs.lstatSync(filepath).isDirectory()) {
+                fs.readdir(filepath, function (err, stats) {
+                    stats.forEach(stat => {
+                        if (fs.lstatSync(filepath + stat).isDirectory()) {
+                            cwd.hasChild = true
+                        } else {
+                            cwd.hasChild = false;
+                        }
+                        if (cwd.hasChild) return;
+                    });
+                    resolve(cwd);
                 });
-                resolve(cwd);
-            });
-        }else{
-            console.log("NONNNNNNNNNNNNNNNNNNNNN")
+            }
+        }catch(e){
+            console.log("ICIIIIIIIIIIIIIIIIIIIIIIIIIIi")
+            const newPathWithoutFilename = path.dirname(filePath);
+
+            if (fs.lstatSync(newPathWithoutFilename).isDirectory()) {
+                fs.readdir(newPathWithoutFilename, function (err, stats) {
+                    stats.forEach(stat => {
+                        if (fs.lstatSync(newPathWithoutFilename + stat).isDirectory()) {
+                            cwd.hasChild = true
+                        } else {
+                            cwd.hasChild = false;
+                        }
+                        if (cwd.hasChild) return;
+                    });
+                    resolve(cwd);
+                });
+            }
         }
     });
 }
