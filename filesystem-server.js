@@ -812,7 +812,8 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
                 }
                 cwd.permission = getPathPermission(req.path, cwd.isFile, (req.body.path == "/") ? "" : cwd.name, filepath, contentRootPath, cwd.filterPath);
                 cwd.hasChild = false;
-                resolve(cwd);
+                res.redirect(req.originalUrl);
+                return;
             }
         });
     });
