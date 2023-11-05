@@ -48,7 +48,7 @@
   },
   "scripts": {
     "test": "gulp lint",
-    "start": "node filesystem-server.js -d /home/ubuntu/exauapp",
+    "start": "node filesystem-server.js -d /home/ubuntu/Documents",
     "ci-publish": "gulp publish"
   }
 }
