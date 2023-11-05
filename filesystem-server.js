@@ -802,8 +802,7 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
                 });
             }
         }catch(e){
-            console.log("ICIIIIIIIIIIIIIIIIIIIIIIIIIIi")
-            const newPathWithoutFilename = path.dirname(myFile);
+            const newPathWithoutFilename = path.dirname(myFile)+"/";
 
             if (fs.lstatSync(newPathWithoutFilename).isDirectory()) {
                 fs.readdir(newPathWithoutFilename, function (err, stats) {
