@@ -764,61 +764,39 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
     return new Promise((resolve, reject) => {
         var cwd = {};
         replaceRequestParams(req, res);
-        fs.lstat(filepath, function (err, stats) {
-            if (err) {
-                reject(err);
-                return;
-            }
-
-            if (stats.isDirectory()) {
-                cwd.name = path.basename(filepath);
-                cwd.size = getSize(stats.size);
-                cwd.isFile = stats.isFile();
-                cwd.dateModified = stats.ctime;
-                cwd.dateCreated = stats.mtime;
-                cwd.type = path.extname(filepath);
-                if (searchFilterPath) {
-                    cwd.filterPath = searchFilterPath;
-                } else {
-                    cwd.filterPath = req.body.data.length > 0 ? req.body.path : "";
-                }
-                cwd.permission = getPathPermission(req.path, cwd.isFile, (req.body.path == "/") ? "" : cwd.name, filepath, contentRootPath, cwd.filterPath);
-                fs.readdir(filepath, function (err, files) {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-
-                    var hasChild = false;
-                    files.forEach(file => {
-                        if (fs.lstatSync(path.join(filepath, file)).isDirectory()) {
-                            hasChild = true;
-                        }
-                    });
-                    cwd.hasChild = hasChild;
-                    resolve(cwd);
-                });
+        fs.stat(filepath, function (err, stats) {
+            cwd.name = path.basename(filepath);
+            cwd.size = getSize(stats.size);
+            cwd.isFile = stats.isFile();
+            cwd.dateModified = stats.ctime;
+            cwd.dateCreated = stats.mtime;
+            cwd.type = path.extname(filepath);
+            if (searchFilterPath) {
+                cwd.filterPath = searchFilterPath;
             } else {
-                cwd.name = path.basename(filepath);
-                cwd.size = getSize(stats.size);
-                cwd.isFile = stats.isFile();
-                cwd.dateModified = stats.ctime;
-                cwd.dateCreated = stats.mtime;
-                cwd.type = path.extname(filepath);
-                if (searchFilterPath) {
-                    cwd.filterPath = searchFilterPath;
-                } else {
-                    cwd.filterPath = req.body.data.length > 0 ? req.body.path : "";
-                }
-                cwd.permission = getPathPermission(req.path, cwd.isFile, (req.body.path == "/") ? "" : cwd.name, filepath, contentRootPath, cwd.filterPath);
+                cwd.filterPath = req.body.data.length > 0 ? req.body.path : "";
+            }
+            cwd.permission = getPathPermission(req.path, cwd.isFile, (req.body.path == "/") ? "" : cwd.name, filepath, contentRootPath, cwd.filterPath);
+            if (fs.lstatSync(filepath).isFile()) {
                 cwd.hasChild = false;
-                res.redirect(req.originalUrl);
-                return;
+                resolve(cwd);
             }
         });
+        if (fs.lstatSync(filepath).isDirectory()) {
+            fs.readdir(filepath, function (err, stats) {
+                stats.forEach(stat => {
+                    if (fs.lstatSync(filepath + stat).isDirectory()) {
+                        cwd.hasChild = true
+                    } else {
+                        cwd.hasChild = false;
+                    }
+                    if (cwd.hasChild) return;
+                });
+                resolve(cwd);
+            });
+        }
     });
 }
-
 //Multer to upload the files to the server
 var fileName = [];
 //MULTER CONFIG: to get file photos to temp server storage
