@@ -765,26 +765,30 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
         var cwd = {};
         replaceRequestParams(req, res);
         fs.stat(filepath, function (err, stats) {
-            cwd.name = path.basename(filepath);
-            cwd.size = getSize(stats.size);
-            cwd.isFile = stats.isFile();
-            cwd.dateModified = stats.ctime;
-            cwd.dateCreated = stats.mtime;
-            cwd.type = path.extname(filepath);
-            if (searchFilterPath) {
-                cwd.filterPath = searchFilterPath;
-            } else {
-                cwd.filterPath = req.body.data.length > 0 ? req.body.path : "";
-            }
-            cwd.permission = getPathPermission(req.path, cwd.isFile, (req.body.path == "/") ? "" : cwd.name, filepath, contentRootPath, cwd.filterPath);
-            if (fs.lstatSync(filepath).isFile()) {
-                cwd.hasChild = false;
-                resolve(cwd);
+            if(stats){
+                cwd.name = path.basename(filepath);
+                cwd.size = getSize(stats.size);
+                cwd.isFile = stats.isFile();
+                cwd.dateModified = stats.ctime;
+                cwd.dateCreated = stats.mtime;
+                cwd.type = path.extname(filepath);
+                if (searchFilterPath) {
+                    cwd.filterPath = searchFilterPath;
+                } else {
+                    cwd.filterPath = req.body.data.length > 0 ? req.body.path : "";
+                }
+                cwd.permission = getPathPermission(req.path, cwd.isFile, (req.body.path == "/") ? "" : cwd.name, filepath, contentRootPath, cwd.filterPath);
+                if (fs.lstatSync(filepath).isFile()) {
+                    cwd.hasChild = false;
+                    resolve(cwd);
+                }
             }
         });
-
         
-        if (fs.lstatSync(filepath).isDirectory()) {
+        if (fs.lstatSync(filepath).isFile()) {
+            cwd.hasChild = false; // Si c'est un fichier, il ne peut pas avoir d'enfants
+            resolve(cwd);
+        }else{
             fs.readdir(filepath, function (err, stats) {
                 stats.forEach(stat => {
                     if (fs.lstatSync(filepath + stat).isDirectory()) {
@@ -795,7 +799,7 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
                     if (cwd.hasChild) return;
                 });
                 resolve(cwd);
-            });
+            });   
         }
     });
 }
