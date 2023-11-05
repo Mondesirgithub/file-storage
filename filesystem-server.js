@@ -772,9 +772,9 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
         fs.stat(filepath, function (err, stats) {
             cwd.name = path.basename(filepath);
             cwd.size = getSize(stats ? stats.size : null);
-            cwd.isFile = stats.isFile();
-            cwd.dateModified = stats.ctime;
-            cwd.dateCreated = stats.mtime;
+            cwd.isFile = stats ? stats.isFile() : true;
+            cwd.dateModified = stats ? stats.ctime : new Date();
+            cwd.dateCreated = stats ? stats.mtime : new Date();
             cwd.type = path.extname(filepath);
             if (searchFilterPath) {
                 cwd.filterPath = searchFilterPath;
