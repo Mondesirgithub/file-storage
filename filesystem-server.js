@@ -764,8 +764,8 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
     return new Promise((resolve, reject) => {
         var cwd = {};
         replaceRequestParams(req, res);
-        try{
-            fs.stat(filepath, function (err, stats) {
+        fs.stat(filepath, function (err, stats) {
+            try{
                 cwd.name = path.basename(filepath);
                 cwd.size = getSize(stats.size);
                 cwd.isFile = stats.isFile();
@@ -782,7 +782,12 @@ function FileManagerDirectoryContent(req, res, filepath, searchFilterPath) {
                     cwd.hasChild = false;
                     resolve(cwd);
                 }
-            });
+            }catch(e){
+                res.redirect("http://localhost:3000/bordoreaux");
+            }
+        });
+
+        try{
             if (fs.lstatSync(filepath).isDirectory()) {
                 fs.readdir(filepath, function (err, stats) {
                     stats.forEach(stat => {
